@@ -5,11 +5,11 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 const Files = () => {
   return (
-    <div className={styles.containerFiles}>
-      <PanelGroup direction='horizontal'>
+    <PanelGroup direction='horizontal'>
+      {/* <Panel minSizePixels={50} maxSizePixels={50}>
         <div
           style={{
-            width: '40px',
+            height: '100%',
             background: 'black',
             borderRight: '1px solid gray',
             padding: '5px',
@@ -30,19 +30,22 @@ const Files = () => {
             />
           </svg>
         </div>
-        <Panel collapsible={true} collapsedSizePixels={35} minSizePercentage={10}>
-          List File
-        </Panel>
-        <PanelResizeHandle
-          style={{
-            width: '2px',
-            cursor: 'col-resize',
-            background: 'gray',
-          }}
-        />
-        <Panel>Edit File</Panel>
-      </PanelGroup>
-    </div>
+      </Panel> */}
+
+      <Panel minSizePixels={400} maxSizePixels={600}>
+        List File
+      </Panel>
+
+      <PanelResizeHandle
+        style={{
+          width: '2px',
+          cursor: 'col-resize',
+          background: 'gray',
+        }}
+      />
+
+      <Panel key={'edit'}>Edit File</Panel>
+    </PanelGroup>
   );
 };
 
