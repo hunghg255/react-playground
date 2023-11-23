@@ -1,12 +1,8 @@
 import dynamic from 'next/dynamic';
 
-import Files from '@components/Files/Files';
-
-import files from '../.templates.json';
-
 import styles from './page.module.scss';
 
-const Playground = dynamic(() => import('@components/Playground/Playground'), { ssr: false });
+const EditorLayout = dynamic(() => import('@components/EditorLayout/EditorLayout'), { ssr: false });
 
 export default async function Home() {
   return (
@@ -14,8 +10,7 @@ export default async function Home() {
       <header>Learn.react</header>
 
       <div>
-        <Files />
-        <Playground files={files} />
+        <EditorLayout />
       </div>
     </main>
   );

@@ -9,6 +9,7 @@ import Terminal from '@components/Terminal/Terminal';
 import { getWebContainer } from 'src/composables/webContainer';
 
 import styles from './index.module.scss';
+import { Panel, PanelResizeHandle } from 'react-resizable-panels';
 
 const wcUrlProxy = proxy<{ value: string }>({ value: '' });
 
@@ -58,11 +59,26 @@ const Playground = ({ files }: any) => {
   }, []);
 
   return (
-    <div className={styles.containerPlayground}>
-      {iframeUrl && <iframe src={iframeUrl} width={'100%'} height={'100%'} />}
-      {status !== 'ready' && <div>{status}ing...</div>}
-      <Terminal stream={stream} />
-    </div>
+    <>
+      <Panel>
+        <div className={styles.containerPlayground}>
+          {iframeUrl && <iframe src={iframeUrl} width={'100%'} height={'100%'} />}
+          {status !== 'ready' && <div>{status}ing...</div>}
+        </div>
+      </Panel>
+
+      <PanelResizeHandle
+        style={{
+          height: '5px',
+          cursor: 'row-resize',
+          background: 'gray',
+        }}
+      />
+
+      <Panel>
+        <Terminal stream={stream} />
+      </Panel>
+    </>
   );
 };
 
