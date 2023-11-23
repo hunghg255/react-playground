@@ -1,0 +1,17 @@
+.main {
+  height: 100vh;
+  overflow: hidden;
+
+  > div {
+    height: 100%;
+    display: flex;
+  }
+
+  header {
+    height: 70px;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+}
