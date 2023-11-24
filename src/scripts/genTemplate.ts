@@ -9,7 +9,7 @@ const set = _.set;
 const get = _.get;
 
 export const getFiles = async () => {
-  const sourceDir = path.resolve(process.cwd(), 'templates/react-vite');
+  const sourceDir = path.resolve(process.cwd(), '.templates/react-vite');
 
   const rawFiles = (await FastGlob(`${sourceDir}/**/*`)).map((p) => p.replace(`${sourceDir}/`, ''));
 
