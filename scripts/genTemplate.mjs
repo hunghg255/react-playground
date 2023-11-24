@@ -2,56 +2,77 @@ import fs from 'node:fs';
 
 import FastGlob from 'fast-glob';
 
+import _ from 'lodash';
+
+const set = _.set;
+const get = _.get;
+
 const getFiles = async () => {
-  const rawFiles = await FastGlob('.templates/**/*');
-  console.log(rawFiles);
-  const r = rawFiles.reduce((acc, p) => {
-    const content = fs.readFileSync(p, 'utf8');
-    const path = p.replace('.templates/', '');
+  const rawFiles = (await FastGlob('.templates/nuxt/**/*')).map((p) =>
+    p.replace('.templates/', ''),
+  );
 
-    const pathArr = path.split('/');
+  const formatPathDir = (path) => {
+    const b = path.split('/');
+    b.pop();
 
-    if (pathArr.length > 1 && !pathArr.includes('assets')) {
-      const dir = pathArr.slice(0, -1).join('/');
-
-      if (!acc[dir]) {
-        acc[dir] = {
-          directory: {},
-        };
+    return b.reduce((acc, it) => {
+      if (acc === '') {
+        return `${it}.directory`;
       }
 
-      acc[dir].directory[pathArr.at(-1)] = {
-        file: {
-          contents: content,
-        },
-      };
-    } else if (!pathArr.includes('assets')) {
-      acc[path] = {
-        file: {
-          contents: content,
-        },
-      };
-    }
+      return `${acc}.${it}.directory`;
+    }, '');
+  };
 
-    if (pathArr.includes('assets')) {
-      const content = fs.readFileSync(p, 'utf8');
+  const spreadDirectory = (arr) => {
+    let acc = {};
 
-      acc.src.directory.assets = {
-        directory: {
-          'react.svg': {
+    for (const i of arr) {
+      const contents = fs.readFileSync(`.templates/${i}`, 'utf8');
+
+      const b = i.split('/');
+
+      if (b.length === 1 && i.includes('.')) {
+        acc = {
+          ...acc,
+          [i]: {
             file: {
-              contents: content,
+              contents,
             },
           },
+        };
+        continue;
+      }
+
+      const pathDir = formatPathDir(i, 'contents');
+
+      if (get(acc, pathDir)) {
+        const obj = get(acc, pathDir);
+        set(acc, pathDir, {
+          ...obj,
+          [b[b.length - 1]]: {
+            file: {
+              contents,
+            },
+          },
+        });
+        continue;
+      }
+
+      set(acc, pathDir, {
+        [b[b.length - 1]]: {
+          file: {
+            contents,
+          },
         },
-      };
+      });
     }
 
     return acc;
-  }, {});
+  };
 
-  // return r;
-  fs.writeFileSync('src/.templates.json', JSON.stringify(r, null, 2));
+  fs.writeFileSync('src/templates-nuxt.json', JSON.stringify(spreadDirectory(rawFiles), null, 2));
 };
 
 getFiles();

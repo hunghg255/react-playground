@@ -28,9 +28,12 @@ const Terminal = ({ stream }: any) => {
   }, [stream, terminal]);
 
   return (
-    <div className={styles.containerTerminal}>
-      <div ref={refTerminal}></div>
-    </div>
+    <>
+      <p className='title_panel'>Terminal</p>
+      <div className={styles.containerTerminal}>
+        <div ref={refTerminal}></div>
+      </div>
+    </>
   );
 };
 

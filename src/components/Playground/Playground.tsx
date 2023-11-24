@@ -61,19 +61,15 @@ const Playground = ({ files }: any) => {
   return (
     <>
       <Panel>
+        <p className='title_panel'>Preview</p>
+
         <div className={styles.containerPlayground}>
           {iframeUrl && <iframe src={iframeUrl} width={'100%'} height={'100%'} />}
           {status !== 'ready' && <div>{status}ing...</div>}
         </div>
       </Panel>
 
-      <PanelResizeHandle
-        style={{
-          height: '5px',
-          cursor: 'row-resize',
-          background: 'gray',
-        }}
-      />
+      <PanelResizeHandle className='resize-row' />
 
       <Panel>
         <Terminal stream={stream} />
