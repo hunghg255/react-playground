@@ -21,13 +21,14 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/api/*"],
-      "@components/*": ["src/components/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@layout/*": ["src/layout/*"],
-      "@store/*": ["src/store/*"],
-      "@utils/*": ["src/utils/*"],
-      "@services/*": ["src/services/*"]
+      "~api/*": ["src/api/*"],
+      "~components/*": ["src/components/*"],
+      "~hooks/*": ["src/hooks/*"],
+      "~layout/*": ["src/layout/*"],
+      "~store/*": ["src/store/*"],
+      "~utils/*": ["src/utils/*"],
+      "~services/*": ["src/services/*"],
+      "~styles/*": ["src/styles/*"]
     }
   },
   "include": [

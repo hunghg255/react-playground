@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Terminal as XTerminal } from 'xterm';
 
 import styles from './index.module.scss';
+import { Icon } from '~components/Icon/Icon';
 
 const log_stream = (terminal: any) =>
   new WritableStream({
@@ -28,12 +29,15 @@ const Terminal = ({ stream }: any) => {
   }, [stream, terminal]);
 
   return (
-    <>
-      <p className='title_panel'>Terminal</p>
+    <div>
+      <p className='title_panel'>
+        <Icon icon='icon-terminal' />
+        Terminal
+      </p>
       <div className={styles.containerTerminal}>
         <div ref={refTerminal}></div>
       </div>
-    </>
+    </div>
   );
 };
 

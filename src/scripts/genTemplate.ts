@@ -3,20 +3,21 @@ import fs from 'node:fs';
 import FastGlob from 'fast-glob';
 
 import _ from 'lodash';
+import path from 'node:path';
 
 const set = _.set;
 const get = _.get;
 
-const getFiles = async () => {
-  const rawFiles = (await FastGlob('.templates/nuxt/**/*')).map((p) =>
-    p.replace('.templates/', ''),
-  );
+export const getFiles = async () => {
+  const sourceDir = path.resolve(process.cwd(), 'templates/react-vite');
 
-  const formatPathDir = (path) => {
+  const rawFiles = (await FastGlob(`${sourceDir}/**/*`)).map((p) => p.replace(`${sourceDir}/`, ''));
+
+  const formatPathDir = (path: any) => {
     const b = path.split('/');
     b.pop();
 
-    return b.reduce((acc, it) => {
+    return b.reduce((acc: any, it: any) => {
       if (acc === '') {
         return `${it}.directory`;
       }
@@ -25,11 +26,18 @@ const getFiles = async () => {
     }, '');
   };
 
-  const spreadDirectory = (arr) => {
+  const files: any = [];
+
+  const spreadDirectory = (arr: any) => {
     let acc = {};
 
     for (const i of arr) {
-      const contents = fs.readFileSync(`.templates/${i}`, 'utf8');
+      const contents = fs.readFileSync(`${sourceDir}/${i}`, 'utf8');
+
+      files.push({
+        contents,
+        filePath: i,
+      });
 
       const b = i.split('/');
 
@@ -40,12 +48,13 @@ const getFiles = async () => {
             file: {
               contents,
             },
+            filePath: i,
           },
         };
         continue;
       }
 
-      const pathDir = formatPathDir(i, 'contents');
+      const pathDir = formatPathDir(i);
 
       if (get(acc, pathDir)) {
         const obj = get(acc, pathDir);
@@ -54,6 +63,7 @@ const getFiles = async () => {
           [b[b.length - 1]]: {
             file: {
               contents,
+              filePath: i,
             },
           },
         });
@@ -64,6 +74,7 @@ const getFiles = async () => {
         [b[b.length - 1]]: {
           file: {
             contents,
+            filePath: i,
           },
         },
       });
@@ -72,7 +83,12 @@ const getFiles = async () => {
     return acc;
   };
 
-  fs.writeFileSync('src/templates-nuxt.json', JSON.stringify(spreadDirectory(rawFiles), null, 2));
+  const tree = spreadDirectory(rawFiles);
+
+  return {
+    files,
+    tree,
+  };
 };
 
 getFiles();

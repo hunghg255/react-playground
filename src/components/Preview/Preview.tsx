@@ -4,16 +4,17 @@ import React, { useEffect, useState } from 'react';
 
 import { proxy, useSnapshot } from 'valtio';
 
-import { statusProxy } from '@components/Playground/store';
-import Terminal from '@components/Terminal/Terminal';
+import { statusProxy, wcProxy } from '~components/Preview/store';
+import Terminal from '~components/Terminal/Terminal';
 import { getWebContainer } from 'src/composables/webContainer';
 
 import styles from './index.module.scss';
 import { Panel, PanelResizeHandle } from 'react-resizable-panels';
+import { Icon } from '~components/Icon/Icon';
 
 const wcUrlProxy = proxy<{ value: string }>({ value: '' });
 
-const Playground = ({ files }: any) => {
+const Preview = ({ tree }: any) => {
   const { value: status } = useSnapshot(statusProxy);
   const { value: iframeUrl } = useSnapshot(wcUrlProxy);
   const [stream, setStream] = useState<any>();
@@ -22,9 +23,10 @@ const Playground = ({ files }: any) => {
     async function startDevServer() {
       const wc = await getWebContainer();
 
+      wcProxy.value = wc;
       statusProxy.value = 'mount';
 
-      await wc.mount(files);
+      await wc.mount(tree);
 
       statusProxy.value = 'install';
 
@@ -61,7 +63,10 @@ const Playground = ({ files }: any) => {
   return (
     <>
       <Panel>
-        <p className='title_panel'>Preview</p>
+        <p className='title_panel'>
+          <Icon icon='icon-global' />
+          Preview
+        </p>
 
         <div className={styles.containerPlayground}>
           {iframeUrl && <iframe src={iframeUrl} width={'100%'} height={'100%'} />}
@@ -78,4 +83,4 @@ const Playground = ({ files }: any) => {
   );
 };
 
-export default Playground;
+export default Preview;
